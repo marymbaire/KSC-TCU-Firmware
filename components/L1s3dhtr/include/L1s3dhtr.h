@@ -90,9 +90,18 @@ typedef struct {
 // ============================================================================
 
 /**
- * @brief Initialise the I2C bus and configure the LIS3DHTR.
+ * @brief Initialise the I2C bus .
  *
- * Installs the I2C driver, verifies WHO_AM_I, then writes CTRL_REG1 to
+ * Installs the I2C driver
+ * @return ESP_OK on success, ESP_ERR_NOT_FOUND other esp_err_t on I2C failure.
+ */
+esp_err_t i2c_init(void);
+
+/**
+ * @brief
+ *
+ *Configure the LIS3DHTR
+ *verifies WHO_AM_I, then writes CTRL_REG1 to
  * start continuous measurement at 100 Hz with all axes enabled.
  *
  * @return ESP_OK on success, ESP_ERR_NOT_FOUND if WHO_AM_I mismatch,

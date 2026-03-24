@@ -356,22 +356,33 @@ static void accel_test_task(void *pvParameters)
 {
     ESP_LOGI(TAG_ACCEL, "Accelerometer test task started");
 
-    /* --- Step 1: I2C bus scan --- */
-    ESP_LOGI(TAG_ACCEL, "Running I2C bus scan...");
-    lis3dhtr_i2c_scan();
-
-    /* --- Step 2 & 3: WHO_AM_I + full init --- */
-    esp_err_t ret = lis3dhtr_init();
+    /* --- Step 1: WHO_AM_I + full init --- */
+    esp_err_t ret = i2c_init();
     if (ret != ESP_OK) {
-        ESP_LOGE(TAG_ACCEL, "LIS3DHTR init FAILED (%s). Accelerometer task stopping.",
+        ESP_LOGE(TAG_ACCEL, "I2C init FAILED (%s). Accelerometer task stopping.",
                  esp_err_to_name(ret));
         ESP_LOGE(TAG_ACCEL, "Check: SCL=IO%d, SDA=IO%d, SA0=GND, pull-ups fitted?",
                  LIS3DHTR_SCL_PIN, LIS3DHTR_SDA_PIN);
         vTaskDelete(NULL);
         return;
+    }    
+    ESP_LOGI(TAG_ACCEL, "I2C Bus ready");
+    
+     /* --- Step 2: I2C bus scan --- */
+    ESP_LOGI(TAG_ACCEL, "Running I2C bus scan...");
+    lis3dhtr_i2c_scan();   
+    
+    /* --- Step 3: Accelerometer configuration and check WHO_AM_I register --- */
+    ret= lis3dhtr_init();
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG_ACCEL, "Accelerometer init FAILED (%s). Accelerometer task stopping.",
+                 esp_err_to_name(ret));
+        ESP_LOGE(TAG_ACCEL, "Accelerometer address could not be confirmed");
+        vTaskDelete(NULL);
+        return;
     }
-
-    ESP_LOGI(TAG_ACCEL, "LIS3DHTR ready");
+    
+    ESP_LOGI(TAG_ACCEL, "LIS3DHTR ready");    
 
     while (1) {
         vTaskDelay(pdMS_TO_TICKS(ACCEL_READ_INTERVAL_MS));
@@ -398,19 +409,13 @@ static void rs485_mux_test_task(void *pvParameters)
             mux_select_channel(ch);
 
             for (int tx = 1; tx <= HELLO_REPEAT_COUNT; tx++) {
-                ESP_LOGI(TAG_RS485, "[%s] TX %d/%d → \"Hello World\"",
-                         mux_channels[ch].name, tx, HELLO_REPEAT_COUNT);
                 rs485_send("Hello World\r\n");
                 vTaskDelay(pdMS_TO_TICKS(BETWEEN_TX_DELAY_MS));
             }
 
-            ESP_LOGI(TAG_RS485, "[%s] Done. Pausing %d ms...",
-                     mux_channels[ch].name, BETWEEN_SLAVE_DELAY_MS);
             vTaskDelay(pdMS_TO_TICKS(BETWEEN_SLAVE_DELAY_MS));
         }
 
-        ESP_LOGI(TAG_RS485, "All slaves done. Waiting %d ms before next cycle...",
-                 BETWEEN_CYCLE_DELAY_MS);
         vTaskDelay(pdMS_TO_TICKS(BETWEEN_CYCLE_DELAY_MS));
     }
 }

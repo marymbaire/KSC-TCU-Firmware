@@ -83,7 +83,7 @@ static esp_err_t lis3dhtr_read_regs(uint8_t reg, uint8_t *dst, size_t len)
 // PUBLIC API
 // ============================================================================
 
-esp_err_t lis3dhtr_init(void)
+esp_err_t i2c_init(void)
 {
     ESP_LOGI(TAG, "Initialising I2C bus — SCL:IO%d  SDA:IO%d  Addr:0x%02X",
              LIS3DHTR_SCL_PIN, LIS3DHTR_SDA_PIN, LIS3DHTR_I2C_ADDR);
@@ -118,7 +118,12 @@ esp_err_t lis3dhtr_init(void)
     }
 
     ESP_LOGI(TAG, "I2C driver installed at %d Hz", LIS3DHTR_I2C_FREQ_HZ);
+	return ESP_OK;	
+}
 
+esp_err_t lis3dhtr_init(void)
+{
+	esp_err_t ret;
     /* Verify device identity */
     uint8_t who_am_i = 0;
     ret = lis3dhtr_check_who_am_i(&who_am_i);
@@ -150,7 +155,7 @@ esp_err_t lis3dhtr_init(void)
     }
 
     ESP_LOGI(TAG, "LIS3DHTR configured — 100 Hz, ±2g, high-res, all axes ON");
-    return ESP_OK;
+    return ESP_OK;	
 }
 
 void lis3dhtr_i2c_scan(void)
