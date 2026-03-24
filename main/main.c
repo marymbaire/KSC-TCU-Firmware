@@ -23,8 +23,8 @@
  *
  *  3. LIS3DHTR Accelerometer (I2C)
  *     - I2C bus scan to confirm device presence (expected at 0x18)
- *     - WHO_AM_I register read and verify (expected 0x33)
- *     - Continuous accelerometer data read every 2 s, logged to console
+ *     - WHO_AM_I register read and verify (expected 0x33) 
+   
  *     Sensor task also runs on Core 0.
  *
  * ============================================================================
