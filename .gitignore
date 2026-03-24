@@ -1,11 +1,12 @@
 # Build files
 /build/
 /build_*/
-/*.bin
-/*.elf
-/*.map
+*.bin
+*.elf
+*.map
 
 # ESP-IDF specific
+sdkconfig
 sdkconfig.old
 sdkconfig.defaults
 

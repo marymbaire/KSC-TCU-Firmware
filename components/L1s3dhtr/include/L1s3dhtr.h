@@ -21,7 +21,7 @@
 #define LIS3DHTR_H
 
 #include "esp_err.h"
-#include "driver/i2c.h"
+#include "driver/i2c_master.h"
 #include <stdint.h>
 #include <stdbool.h>
 
