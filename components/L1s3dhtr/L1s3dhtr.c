@@ -6,7 +6,7 @@
  */
 
 #include "L1s3dhtr.h"
-#include "driver/i2c_master.h"
+#include "driver/i2c.h"
 #include "driver/gpio.h"
 #include "esp_log.h"
 #include "esp_err.h"
