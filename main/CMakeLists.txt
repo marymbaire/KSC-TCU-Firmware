@@ -1,10 +1,10 @@
-# See the build system documentation in IDF programming guide
-# for more information about component CMakeLists.txt files.
-
 idf_component_register(
-    SRCS main.c         # list the source files of this component
-    INCLUDE_DIRS        # optional, add here public include directories
-    PRIV_INCLUDE_DIRS   # optional, add here private include directories
-    REQUIRES            # optional, list the public requirements (component names)
-    PRIV_REQUIRES       # optional, list the private requirements
+    SRCS "main.c"
+    INCLUDE_DIRS "."
+    PRIV_REQUIRES
+        freertos driver nvs_flash esp_system esp_timer
+        board_config rgb_led trike_sensors lis3dhtr
+        power_trike_ctrl Quectel_mqtt Quectel_gps
+        bms_monitor_task jkbms_serial_storage factory_test
+        json
 )
